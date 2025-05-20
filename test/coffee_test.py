@@ -1,31 +1,37 @@
+import sys
+import os
 import unittest
-from coffee import Coffee
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 from customer import Customer
+from coffee import Coffee
 from order import Order
 
 class TestCoffee(unittest.TestCase):
+    def test_name_property(self):
+        c = Coffee("Mocha")
+        self.assertEqual(c.name, "Mocha")
 
-    def test_coffee_name_validation(self):
         with self.assertRaises(ValueError):
             Coffee("A")
-        c = Coffee("Espresso")
-        self.assertEqual(c.name, "Espresso")
-        with self.assertRaises(AttributeError):
-            c.name = "Latte"  # name is immutable
 
-    def test_num_orders_and_avg_price(self):
-        c1 = Customer("Alice")
-        coffee = Coffee("Mocha")
-        c1.create_order(coffee, 5.0)
-        c1.create_order(coffee, 7.0)
-        self.assertEqual(coffee.num_orders(), 2)
-        self.assertEqual(coffee.average_price(), 6.0)
+        with self.assertRaises(TypeError):
+            Coffee(123)
 
-    def test_unique_customers(self):
+    def test_coffee_orders_customers(self):
+        c1 = Customer("Tom")
+        c2 = Customer("Jerry")
+        coffee = Coffee("Espresso")
+        c1.create_order(coffee, 3.5)
+        c2.create_order(coffee, 4.0)
+
+        self.assertEqual(len(coffee.orders()), 2)
+        self.assertIn(c1, coffee.customers())
+        self.assertIn(c2, coffee.customers())
+
+    def test_average_price(self):
+        c = Customer("Ava")
         coffee = Coffee("Americano")
-        c1 = Customer("Alice")
-        c2 = Customer("Bob")
-        c1.create_order(coffee, 5.0)
-        c2.create_order(coffee, 6.0)
-        self.assertEqual(set(coffee.customers()), {c1, c2})
+        self.assertEqual(coffee.average_price(), 0)
 
+        c.create_orde_

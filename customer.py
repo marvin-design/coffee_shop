@@ -1,7 +1,6 @@
 class Customer:
     def __init__(self, name):
         self.name = name
-        self._orders = []
 
     @property
     def name(self):
@@ -9,29 +8,17 @@ class Customer:
 
     @name.setter
     def name(self, value):
-        if isinstance(value, str) and 1 <= len(value) <= 15:
-            self._name = value
-        else:
-            raise ValueError("Name must be a string between 1 and 15 characters.")
+        if not isinstance(value, str):
+            raise TypeError("Name must be a string.")
+        if not (1 <= len(value) <= 15):
+            raise ValueError("Name must be between 1 and 15 characters.")
+        self._name = value
 
     def orders(self):
-        return self._orders
+        return [order for order in Order._all if order.customer == self]
 
     def coffees(self):
-        return list({order.coffee for order in self._orders})
+        return list({order.coffee for order in self.orders()})
 
     def create_order(self, coffee, price):
-        order = Order(self, coffee, price)
-        self._orders.append(order)
-        coffee._orders.append(order)
-        return order
-
-    @classmethod
-    def most_aficionado(cls, coffee):
-        customer_totals = {}
-        for order in coffee.orders():
-            customer = order.customer
-            customer_totals[customer] = customer_totals.get(customer, 0) + order.price
-        if not customer_totals:
-            return None
-        return max(customer_totals, key=customer_totals.get)
+        return Order(self, coffee, price)
