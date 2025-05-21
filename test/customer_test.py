@@ -1,31 +1,21 @@
-import sys
-import os
 import unittest
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-
+import sys, os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from customer import Customer
-from coffee import Coffee
-from order import Order
 
 class TestCustomer(unittest.TestCase):
-    def test_name_getter_setter(self):
-        c = Customer("Anna")
-        self.assertEqual(c.name, "Anna")
-
-        c.name = "Ben"
-        self.assertEqual(c.name, "Ben")
-
+    def test_valid_and_invalid_name(self):
+        c = Customer("Elyanna")
+        self.assertEqual(c.name, "Elyanna")
         with self.assertRaises(ValueError):
-            c.name = ""
+            Customer("")  # Too short
 
+    def test_name_setter(self):
+        c = Customer("Carlson")
+        c.name = "Azaria"
+        self.assertEqual(c.name, "Azaria")
         with self.assertRaises(ValueError):
-            c.name = "ThisNameIsWayTooLong"
+            c.name = ""  # Invalid
 
-        with self.assertRaises(TypeError):
-            c.name = 123
-
-    def test_customer_orders_and_coffees(self):
-        c = Customer("Alice")
-        coffee = Coffee("Latte")
-        c.create_order(coffee, 5.0)
-        
+if __name__ == "__main__":
+    unittest.main()

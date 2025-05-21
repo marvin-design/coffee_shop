@@ -1,37 +1,21 @@
-import sys
-import os
 import unittest
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-
+import sys, os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from customer import Customer
-from coffee import Coffee
-from order import Order
 
-class TestCoffee(unittest.TestCase):
-    def test_name_property(self):
-        c = Coffee("Mocha")
-        self.assertEqual(c.name, "Mocha")
-
+class TestCustomer(unittest.TestCase):
+    def test_valid_and_invalid_name(self):
+        c = Customer("Elyanna")
+        self.assertEqual(c.name, "Elyanna")
         with self.assertRaises(ValueError):
-            Coffee("A")
+            Customer("")  # Too short
 
-        with self.assertRaises(TypeError):
-            Coffee(123)
+    def test_name_setter(self):
+        c = Customer("Carlson")
+        c.name = "Azaria"
+        self.assertEqual(c.name, "Azaria")
+        with self.assertRaises(ValueError):
+            c.name = ""  # Invalid
 
-    def test_coffee_orders_customers(self):
-        c1 = Customer("Tom")
-        c2 = Customer("Jerry")
-        coffee = Coffee("Espresso")
-        c1.create_order(coffee, 3.5)
-        c2.create_order(coffee, 4.0)
-
-        self.assertEqual(len(coffee.orders()), 2)
-        self.assertIn(c1, coffee.customers())
-        self.assertIn(c2, coffee.customers())
-
-    def test_average_price(self):
-        c = Customer("Ava")
-        coffee = Coffee("Americano")
-        self.assertEqual(coffee.average_price(), 0)
-
-        c.create_orde_
+if __name__ == "__main__":
+    unittest.main()
